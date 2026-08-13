@@ -1,0 +1,17 @@
+# Lead database (contains submitted contact details — never commit)
+leads.db
+*.db
+*.db-journal
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+env/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
