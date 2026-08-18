@@ -19,6 +19,19 @@ uvicorn app:app --host 0.0.0.0 --port 8000
 
 Open <http://localhost:8000>.
 
+## Working on this with Claude Code
+
+The AI tooling used to build this page (design-system skills, animation
+references, the 21st.dev MCP server) is **not** committed — it is ~13MB of
+third-party content. To get the same setup on your machine:
+
+```bash
+bash scripts/setup-agent-skills.sh
+```
+
+See **[docs/AGENT-SETUP.md](docs/AGENT-SETUP.md)** for the full guide, including
+how to get your own API keys. None of this is needed to just run the site.
+
 ## Project layout
 
 | Path | What it is |
