@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  website:
+    build:
+      context: ./website\ sentinel
+    container_name: newvis-website
+    ports:
+      - "8000:8000"
+    environment:
+      - ADMIN_KEY=${ADMIN_KEY:-dev-key}
+      - LEADS_DB_PATH=/app/leads.db
+    volumes:
+      - website-leads:/app
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  dashboard:
+    build:
+      context: ./SENTINEL-UI
+    container_name: newvis-dashboard
+    ports:
+      - "8002:8002"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8002/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  website-leads:
+    driver: local
