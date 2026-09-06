@@ -6,32 +6,72 @@ Premium dark neon marketing website + lead-capture platform for **NewVis AI**, a
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Quick Start (3 Steps)
 
-### Prerequisites
-- **Python 3.9+** (3.10+ recommended)
-- **pip** (Python package manager)
-- **Git**
+### ✅ Prerequisites
+Before starting, make sure you have:
+- **Python 3.9+** installed (check: `python --version` or `python3 --version`)
+- **Git** installed (check: `git --version`)
+- **pip** (comes with Python)
 
-### Installation & Run
+**Don't have Python?** Download from [python.org](https://www.python.org/downloads/) (Windows: choose "Add Python to PATH" during install)
 
+### 📋 Step 1: Clone the Repository
+
+**Windows (Command Prompt or PowerShell):**
 ```bash
-# 1. Clone the repository
-git clone https://github.com/NewVisAI/SENTINEL-WEBSITE.git
-cd SENTINEL-WEBSITE
+git clone https://github.com/NewVisAI/NewVis-AI--WEBSITE.git
+cd "NewVis-AI--WEBSITE"
+```
 
-# 2. Create virtual environment (recommended)
+**macOS/Linux (Terminal):**
+```bash
+git clone https://github.com/NewVisAI/NewVis-AI--WEBSITE.git
+cd NewVis-AI--WEBSITE
+```
+
+### 🔧 Step 2: Create Virtual Environment & Install Dependencies
+
+**Windows (Command Prompt):**
+```bash
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# 3. Install dependencies
+venv\Scripts\activate
+pip install --upgrade pip
 pip install -r requirements.txt
+```
 
-# 4. Run the server
+**Windows (PowerShell):**
+```bash
+python -m venv venv
+venv\Scripts\Activate.ps1
+pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+**macOS/Linux (Terminal):**
+```bash
+python3 -m venv venv
+source venv/bin/activate
+pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+### 🎯 Step 3: Run the Server
+
+**All platforms (after activating venv):**
+```bash
 uvicorn app:app --host 0.0.0.0 --port 8000
 ```
 
-📱 **Open in browser:** <http://localhost:8000>
+You should see:
+```
+INFO:     Uvicorn running on http://0.0.0.0:8000
+INFO:     Application startup complete
+```
+
+📱 **Open in browser:** http://localhost:8000
+
+To stop the server, press `Ctrl+C`
 
 ---
 
@@ -93,55 +133,197 @@ LEADS_DB_PATH=/custom/path/leads.db uvicorn app:app --port 8000
 ## ✅ Testing Locally
 
 ### 1. Verify Server is Running
-```bash
-curl http://localhost:8000/healthz
-# Expected: {"ok":true}
-```
+Open your browser and go to: http://localhost:8000
 
-### 2. Test Lead Form
-Open <http://localhost:8000> and:
-- Click "Request a callback"
-- Fill the form and submit
-- Check `leads.db` for the submission:
+You should see the **NewVis AI** homepage with:
+- Dark neon theme (purple and cyan colors)
+- Hero section with "Any space. Every camera"
+- "Request a callback" button in top right
+
+### 2. Test Lead Form (Complete Flow)
+1. Click the **"Request a callback"** button in the top right
+2. A modal popup should appear: "Let's talk about your site"
+3. Fill in the form:
+   - **Name:** Test User
+   - **Email:** test@example.com
+   - **Phone:** +1-555-0123
+   - **Organization:** Test Company (optional)
+   - **Use case:** Select "School / campus"
+   - **Message:** Test message (optional)
+4. Click **"Request my callback"**
+5. You should see: "Thanks — we'll be in touch"
+
+### 3. Verify Lead Was Saved to Database
+
+**Windows (Command Prompt):**
 ```bash
 sqlite3 leads.db "SELECT * FROM leads ORDER BY id DESC LIMIT 1;"
 ```
 
-### 3. Check Static Files
-- Hero dashboard mock: <http://localhost:8000/static/marketing/dashboard-hero.png>
-- Favicon: Should load without errors
+**macOS/Linux:**
+```bash
+sqlite3 leads.db "SELECT * FROM leads ORDER BY id DESC LIMIT 1;"
+```
+
+You should see a row with your test data (name, email, phone, etc.)
+
+### 4. Quick Health Check
+In your terminal, run (in a different terminal while server is running):
+```bash
+curl http://localhost:8000/healthz
+```
+
+Expected response: `{"ok":true}`
 
 ---
 
 ## 🐛 Troubleshooting
 
-### Port 8000 Already in Use
+### ❌ "Address already in use" or "Port 8000 is already in use"
+
+**Problem:** Another program is using port 8000.
+
+**Solution 1: Use a different port**
 ```bash
-# Use a different port
 uvicorn app:app --host 0.0.0.0 --port 8001
+# Then visit: http://localhost:8001
 ```
 
-### Dependencies Installation Fails
+**Solution 2: Kill the process using port 8000**
+
+**Windows (Command Prompt, run as Admin):**
 ```bash
-# Update pip first
-pip install --upgrade pip
-# Then try again
+netstat -ano | findstr :8000
+taskkill /PID <PID> /F
+```
+
+**Windows (PowerShell, run as Admin):**
+```bash
+Get-Process -Id (Get-NetTCPConnection -LocalPort 8000).OwningProcess
+```
+
+**macOS/Linux:**
+```bash
+lsof -i :8000
+kill -9 <PID>
+```
+
+---
+
+### ❌ "ModuleNotFoundError: No module named 'fastapi'"
+
+**Problem:** Dependencies not installed or virtual environment not activated.
+
+**Solution:**
+1. Verify you're in the project directory: `cd <project-path>`
+2. Activate virtual environment:
+   - **Windows:** `venv\Scripts\activate`
+   - **macOS/Linux:** `source venv/bin/activate`
+3. Install dependencies: `pip install -r requirements.txt`
+4. Verify: `pip list` should show `fastapi` and `uvicorn`
+
+---
+
+### ❌ "python: command not found" (macOS/Linux)
+
+**Problem:** Python not installed or not in PATH.
+
+**Solution:**
+- Check if Python is installed: `python3 --version`
+- Use `python3` instead of `python` for all commands:
+  ```bash
+  python3 -m venv venv
+  source venv/bin/activate
+  ```
+
+---
+
+### ❌ "'venv' is not recognized" (Windows)
+
+**Problem:** Virtual environment not created or wrong path.
+
+**Solution:**
+1. Delete existing venv: `rmdir /s venv` (or `rm -r venv` in PowerShell)
+2. Recreate: `python -m venv venv`
+3. Activate: `venv\Scripts\activate`
+4. Verify prompt shows `(venv)` at the start
+
+---
+
+### ❌ Browser shows "localhost refused to connect"
+
+**Problem:** Server isn't running or isn't listening on port 8000.
+
+**Solution:**
+1. Check terminal output — look for: `Uvicorn running on http://0.0.0.0:8000`
+2. If not present, restart server: `uvicorn app:app --host 0.0.0.0 --port 8000`
+3. Try again: http://localhost:8000
+4. If still failing, check for errors above "Port already in use"
+
+---
+
+### ❌ Lead form doesn't submit or shows error
+
+**Problem:** Server is running but form submission fails.
+
+**Solution:**
+1. Open browser DevTools: Press `F12`
+2. Go to **Console** tab — look for red error messages
+3. Go to **Network** tab — click "Request my callback" and look for failed requests
+4. Common issues:
+   - Missing required fields (name, email, phone, use case)
+   - Email format invalid (must include `@`)
+   - Server not responding (see "Browser shows localhost refused")
+
+---
+
+### ❌ Database file won't delete (Windows)
+
+**Problem:** `rm leads.db` doesn't work or says file is in use.
+
+**Solution:**
+1. Stop the server: Press `Ctrl+C` in the terminal
+2. Delete via File Explorer: Find `leads.db` and press `Delete`
+3. Or in command prompt: `del leads.db`
+4. Restart server: `uvicorn app:app --host 0.0.0.0 --port 8000`
+
+---
+
+### ❌ Getting "Permission denied" errors
+
+**Problem:** Virtual environment or file permissions issue.
+
+**Solution (Windows):**
+```bash
+# Open Command Prompt as Administrator
+# Then run activation and pip commands
+venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### Import Errors
-Make sure you're in the correct directory and virtual environment is activated:
+**Solution (macOS/Linux):**
 ```bash
-pwd  # Should show SENTINEL-WEBSITE directory
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+# Add execute permission
+chmod +x venv/bin/activate
+source venv/bin/activate
+pip install -r requirements.txt
 ```
 
-### SQLite Database Issues
-```bash
-# Remove corrupted database
-rm leads.db
-# Server will create a fresh one on next request
-```
+---
+
+### ✅ Still Stuck?
+
+1. **Check terminal output:** Look for error messages above the "Uvicorn running" line
+2. **Verify file structure:** You should have: `landing.html`, `app.py`, `requirements.txt`, `Dockerfile`, `README.md`
+3. **Try fresh install:**
+   ```bash
+   deactivate  # Exit virtual environment
+   rm -r venv  # Delete virtual environment
+   python -m venv venv  # Create fresh one
+   venv\Scripts\activate  # (Windows) or source venv/bin/activate (Mac/Linux)
+   pip install -r requirements.txt
+   uvicorn app:app --host 0.0.0.0 --port 8000
+   ```
 
 ---
 
@@ -273,28 +455,41 @@ at `static/marketing/dashboard-hero.png` and it replaces the mock automatically.
 
 ## 🚢 Deployment
 
-### Production Server
-```bash
-# Using environment variables for production
-ADMIN_KEY=your-production-secret uvicorn app:app --host 0.0.0.0 --port 8000 --workers 4
-```
+### Option 1: Docker (Easiest)
 
-### Docker (Optional)
-Create `Dockerfile`:
-```dockerfile
-FROM python:3.10-slim
-WORKDIR /app
-COPY requirements.txt .
-RUN pip install -r requirements.txt
-COPY . .
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
-```
+**Prerequisites:** Docker installed ([get Docker](https://www.docker.com/products/docker-desktop))
 
-Build and run:
+**Build and run:**
 ```bash
 docker build -t newvis-website .
 docker run -p 8000:8000 newvis-website
 ```
+
+Then visit: http://localhost:8000
+
+**To stop:** Press `Ctrl+C` or run `docker stop <container-id>`
+
+### Option 2: Production Server (Linux/macOS)
+
+For production with multiple workers:
+```bash
+ADMIN_KEY=your-secret-key uvicorn app:app --host 0.0.0.0 --port 8000 --workers 4
+```
+
+### Option 3: Docker Compose (Both Services)
+
+If you want to run **both website and dashboard** together:
+
+**From the parent directory:**
+```bash
+docker-compose up -d
+```
+
+This starts:
+- Website: http://localhost:8000
+- Dashboard: http://localhost:8002
+
+See `DEPLOYMENT.md` for advanced production setup (Nginx, systemd, cloud).
 
 ---
 
