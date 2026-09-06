@@ -1,25 +1,153 @@
-# Sentinel AI — Marketing Site
+# NewVis AI — Marketing Website
 
-A self-contained marketing website + lead-capture form for **Sentinel AI**, the
-general-purpose AI video-analytics platform by **Adiva** that turns existing CCTV
-cameras into real-time safety intelligence (schools, malls, parking, offices,
-warehouses, and more).
+Premium dark neon marketing website + lead-capture platform for **NewVis AI**, an advanced AI video-analytics solution that transforms existing CCTV cameras into intelligent real-time safety systems (schools, malls, parking, offices, warehouses, and more).
 
-The page is a single `landing.html` — no build step, no framework, no bundler.
-A tiny FastAPI backend (`app.py`) serves it and stores "Request a callback"
-submissions in a local SQLite database, with no dependency on the main Sentinel
-product code.
+**Single-file frontend** (`landing.html`) — no build step, no framework, no bundler. Lightweight FastAPI backend (`app.py`) serves the page and stores "Request a callback" submissions in SQLite. 100% self-contained with zero dependencies on other services.
 
-## Run locally
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
+- **Python 3.9+** (3.10+ recommended)
+- **pip** (Python package manager)
+- **Git**
+
+### Installation & Run
 
 ```bash
+# 1. Clone the repository
+git clone https://github.com/NewVisAI/SENTINEL-WEBSITE.git
+cd SENTINEL-WEBSITE
+
+# 2. Create virtual environment (recommended)
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# 3. Install dependencies
 pip install -r requirements.txt
+
+# 4. Run the server
 uvicorn app:app --host 0.0.0.0 --port 8000
 ```
 
-Open <http://localhost:8000>.
+📱 **Open in browser:** <http://localhost:8000>
 
-## Working on this with Claude Code
+---
+
+## 🛠️ System Requirements
+
+| Component | Requirement |
+|-----------|------------|
+| **Python** | 3.9 or higher (3.10+ recommended) |
+| **pip** | Latest version |
+| **OS** | Windows, macOS, Linux |
+| **RAM** | 512MB minimum |
+| **Disk** | ~50MB (dependencies + leads database) |
+| **Port** | 8000 (configurable via `--port` flag) |
+
+---
+
+## 📦 Dependencies
+
+All dependencies are listed in `requirements.txt`:
+
+```
+fastapi>=0.110        # Web framework
+uvicorn[standard]>=0.29  # ASGI server
+pydantic>=2.0        # Data validation
+```
+
+Install all at once:
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+## 🔧 Advanced Configuration
+
+### Running on a different port
+```bash
+uvicorn app:app --host 0.0.0.0 --port 3000
+```
+
+### Running with auto-reload (development)
+```bash
+uvicorn app:app --host 0.0.0.0 --port 8000 --reload
+```
+
+### Enable admin API for lead access
+```bash
+ADMIN_KEY=your-secret-key uvicorn app:app --port 8000
+curl -H "X-Admin-Key: your-secret-key" http://localhost:8000/api/leads
+```
+
+### Custom SQLite database path
+```bash
+LEADS_DB_PATH=/custom/path/leads.db uvicorn app:app --port 8000
+```
+
+---
+
+## ✅ Testing Locally
+
+### 1. Verify Server is Running
+```bash
+curl http://localhost:8000/healthz
+# Expected: {"ok":true}
+```
+
+### 2. Test Lead Form
+Open <http://localhost:8000> and:
+- Click "Request a callback"
+- Fill the form and submit
+- Check `leads.db` for the submission:
+```bash
+sqlite3 leads.db "SELECT * FROM leads ORDER BY id DESC LIMIT 1;"
+```
+
+### 3. Check Static Files
+- Hero dashboard mock: <http://localhost:8000/static/marketing/dashboard-hero.png>
+- Favicon: Should load without errors
+
+---
+
+## 🐛 Troubleshooting
+
+### Port 8000 Already in Use
+```bash
+# Use a different port
+uvicorn app:app --host 0.0.0.0 --port 8001
+```
+
+### Dependencies Installation Fails
+```bash
+# Update pip first
+pip install --upgrade pip
+# Then try again
+pip install -r requirements.txt
+```
+
+### Import Errors
+Make sure you're in the correct directory and virtual environment is activated:
+```bash
+pwd  # Should show SENTINEL-WEBSITE directory
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
+
+### SQLite Database Issues
+```bash
+# Remove corrupted database
+rm leads.db
+# Server will create a fresh one on next request
+```
+
+---
+
+## 🎨 Design & Development
+
+### Working on this with Claude Code
 
 The AI tooling used to build this page (design-system skills, animation
 references, the 21st.dev MCP server) is **not** committed — it is ~13MB of
@@ -32,7 +160,7 @@ bash scripts/setup-agent-skills.sh
 See **[docs/AGENT-SETUP.md](docs/AGENT-SETUP.md)** for the full guide, including
 how to get your own API keys. None of this is needed to just run the site.
 
-## Project layout
+### Project Layout
 
 | Path | What it is |
 | ---- | ---------- |
@@ -41,11 +169,9 @@ how to get your own API keys. None of this is needed to just run the site.
 | `static/marketing/` | Drop `dashboard-hero.png` here to replace the animated hero mock. |
 | `leads.db` | SQLite lead store. Git-ignored — it holds real contact data. |
 
-## Design system
+### Design System
 
-The page uses a dark neon aesthetic ("Neon Vigilance") with a liquid-glass
-surface treatment. All design decisions live in CSS custom properties at the top
-of the `<style>` block — change tokens there rather than hard-coding values.
+The page uses a premium dark neon aesthetic ("Neon Vigilance") with liquid-glass surfaces and glowing gradient effects. All design decisions live in CSS custom properties at the top of the `<style>` block — change tokens there rather than hard-coding values.
 
 **Palette**
 
@@ -143,19 +269,74 @@ sqlite3 leads.db "SELECT created_at, name, phone, email, use_case FROM leads ORD
 The hero shows an animated mock until a real screenshot is present. Drop an image
 at `static/marketing/dashboard-hero.png` and it replaces the mock automatically.
 
-## Before you ship a change
+---
+
+## 🚢 Deployment
+
+### Production Server
+```bash
+# Using environment variables for production
+ADMIN_KEY=your-production-secret uvicorn app:app --host 0.0.0.0 --port 8000 --workers 4
+```
+
+### Docker (Optional)
+Create `Dockerfile`:
+```dockerfile
+FROM python:3.10-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+COPY . .
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+```
+
+Build and run:
+```bash
+docker build -t newvis-website .
+docker run -p 8000:8000 newvis-website
+```
+
+---
+
+## ✨ Before You Ship a Change
 
 - Check at 375 / 768 / 1024 / 1440 px — no horizontal scroll at any width.
 - Test the lead form end-to-end (submit, then confirm the row lands in `leads.db`).
 - Toggle "reduce motion" in your OS and confirm the page is still readable and static.
 - Keep copy honest — see below.
 
-## Notes
+---
 
-- `leads.db` is git-ignored — it holds real contact data and must not be committed.
-- `.claude/` is git-ignored: local agent tooling, not part of the product.
-- Copy is intentionally honest: Production features are stated plainly; Beta
-  features (fall, running, fight, cross-camera Re-ID) are labelled as Beta and no
-  unmeasured accuracy numbers are published. **Please preserve this** — the
-  Production/Beta split and the measured-numbers-only rule are a deliberate
-  positioning choice, not placeholder text.
+## 📋 Notes & Guidelines
+
+### Git Ignore
+- `leads.db` — Git-ignored. Contains real contact data; never commit.
+- `.claude/` — Git-ignored. Local Claude Code tooling, not part of product.
+- `venv/` — Virtual environment. Never commit.
+- `.env` — Environment variables. Never commit.
+
+### Content Guidelines
+- **Production features** — State plainly with measured accuracy numbers
+- **Beta features** (fall detection, cross-camera Re-ID, etc.) — Label as "Beta"
+- **Honest positioning** — No unmeasured claims. This is a deliberate choice.
+- **Keep this convention** — The Production/Beta split is intentional positioning
+
+### Browser Support
+- ✅ Chrome/Edge (full Chromium support)
+- ✅ Firefox (graceful degradation: plain blur instead of refraction)
+- ✅ Safari (graceful degradation: plain blur instead of refraction)
+- ⚠️ IE11 — Not supported
+
+---
+
+## 📞 Support & Feedback
+
+- **Issues:** <https://github.com/NewVisAI/SENTINEL-WEBSITE/issues>
+- **Discussions:** <https://github.com/NewVisAI/SENTINEL-WEBSITE/discussions>
+- **Email:** support@newvis.ai
+
+---
+
+## 📄 License
+
+NewVis AI — Premium Video Analytics Platform. All rights reserved.
