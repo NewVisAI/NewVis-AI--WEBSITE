@@ -4,6 +4,11 @@ Premium dark neon marketing website + lead-capture platform for **NewVis AI**, a
 
 **Single-file frontend** (`landing.html`) — no build step, no framework, no bundler. Lightweight FastAPI backend (`app.py`) serves the page and stores "Request a callback" submissions in SQLite. 100% self-contained with zero dependencies on other services.
 
+
+> **Comparing two designs (branch `claude/confident-cannon-gp60qh`).** Run the server as below, then open
+> **http://localhost:8000/** (the redesigned page) and **http://localhost:8000/alt** (the NewVis.AI page with
+> the product tour of real dashboard screenshots). Both share one lead database, `/privacy` and the 404 page.
+> Once a design is picked, the other page and the `/alt` route are removed.
 ---
 
 ## 🚀 Quick Start (3 Steps)
