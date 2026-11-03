@@ -3,7 +3,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
 WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
-COPY app.py landing.html alt.html privacy.html 404.html ./
+COPY app.py landing.html privacy.html 404.html ./
 COPY static/ static/
 # Leads live on a volume at /data, never inside /app, so code updates aren't masked.
 RUN useradd --system --uid 10001 site && mkdir -p /data && chown site /data

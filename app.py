@@ -9,9 +9,7 @@ Run locally:
     uvicorn app:app --port 8000          # then open http://localhost:8000
 
 Pages:
-    /          landing.html   (the redesigned page)
-    /alt       alt.html       (the NewVis.AI page with the product tour; kept
-                               side by side while the team picks one design)
+    /          landing.html   (landing page + product tour)
     /privacy   privacy.html
 
 Environment (all optional):
@@ -59,15 +57,15 @@ app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 # ---------------------------------------------------------------------------
 # Security headers on every response
 # ---------------------------------------------------------------------------
-# The pages use inline <style>/<script>, hence 'unsafe-inline'. The only third
-# party is Google Fonts (landing.html); everything else is locked to 'self'.
+# The pages use inline <style>/<script>, hence 'unsafe-inline'. No third-party
+# origins are loaded, so everything else is locked to 'self'.
 CSP = (
     "default-src 'self'; "
     "script-src 'self' 'unsafe-inline'; "
-    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
+    "style-src 'self' 'unsafe-inline'; "
     "img-src 'self' data:; "
     "connect-src 'self'; "
-    "font-src 'self' https://fonts.gstatic.com; "
+    "font-src 'self'; "
     "frame-ancestors 'none'; "
     "base-uri 'self'; "
     "form-action 'self'"
@@ -102,11 +100,6 @@ def _page(name: str, status_code: int = 200) -> FileResponse:
 @app.get("/", include_in_schema=False)
 def home():
     return _page("landing.html")
-
-
-@app.get("/alt", include_in_schema=False)
-def home_alt():
-    return _page("alt.html")
 
 
 @app.get("/privacy", include_in_schema=False)

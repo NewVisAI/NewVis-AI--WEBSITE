@@ -131,15 +131,16 @@ class LeadsDatabaseTest(unittest.TestCase):
 
 
 class PagesTest(unittest.TestCase):
-    def test_both_designs_and_shared_pages_are_served(self):
+    def test_pages_and_assets_are_served(self):
         import app as server
         c = TestClient(importlib.reload(server).app)
-        for path in ("/", "/alt", "/privacy", "/robots.txt", "/sitemap.xml", "/healthz",
+        for path in ("/", "/privacy", "/robots.txt", "/sitemap.xml", "/healthz",
                      "/static/favicon.svg", "/static/showcase/dashboard/live-grid.webp"):
             self.assertEqual(c.get(path).status_code, 200, path)
         self.assertEqual(c.get("/no-such-page").status_code, 404)
         csp = c.get("/").headers["content-security-policy"]
-        self.assertIn("https://fonts.googleapis.com", csp)  # landing.html loads Google Fonts
+        self.assertNotIn("googleapis", csp)  # no third-party origins
+        self.assertEqual(c.get("/alt").status_code, 404)  # comparison route is gone
         self.assertIn("frame-ancestors 'none'", csp)
 
 
