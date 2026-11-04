@@ -22,3 +22,6 @@ skills-lock.json
 
 # Design backups / scratch
 landing.original.html
+
+# Secrets
+.env

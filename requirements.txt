@@ -1,3 +1,4 @@
-fastapi>=0.110
-uvicorn[standard]>=0.29
-pydantic>=2.0
+# Website only (no torch / OpenCV). Pinned to versions tested together.
+fastapi==0.138.2
+uvicorn==0.49.0
+pydantic==2.13.4

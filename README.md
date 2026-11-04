@@ -346,86 +346,58 @@ how to get your own API keys. None of this is needed to just run the site.
 
 | Path | What it is |
 | ---- | ---------- |
-| `landing.html` | The entire front end — markup, styles and JS in one file. Read the comment block at the top before editing. |
-| `app.py` | FastAPI server: serves the page, accepts leads, exposes `/healthz`. |
+| `landing.html` | The landing page: markup, styles and JS in one file, including the product tour. |
+| `privacy.html`, `404.html` | Privacy notice (DPDP Act 2023, linked from the form and footer) and not-found page. |
+| `app.py` | FastAPI server: serves the pages, accepts leads, security headers, `/healthz`. |
+| `static/showcase/` | Product-tour images: `dashboard/*.webp` are real dashboard screenshots, `tracking.jpg` a pipeline frame. Faces are blurred. |
 | `static/marketing/` | Drop `dashboard-hero.png` here to replace the animated hero mock. |
-| `leads.db` | SQLite lead store. Git-ignored — it holds real contact data. |
+| `tools/capture_dashboard.py` | Retakes the tour screenshots from a running NewVis server (see its docstring). |
+| `test_leads.py` | `python -m unittest test_leads`: leads reach the database, spam is rejected, the call list is protected. |
+| `leads.db` | SQLite lead store. Git-ignored: it holds real contact data. |
 
 ### Design System
 
-The page uses a premium dark neon aesthetic ("Neon Vigilance") with liquid-glass surfaces and glowing gradient effects. All design decisions live in CSS custom properties at the top of the `<style>` block — change tokens there rather than hard-coding values.
-
-**Palette**
+Dark canvas with cyan and violet accents, glass cards and one gradient for primary actions. All
+design decisions live in CSS custom properties at the top of the `<style>` block: change tokens
+there rather than hard-coding values.
 
 | Token | Value | Use |
 | ----- | ----- | --- |
-| `--bg` | `#04060D` | Page canvas |
-| `--cyan` | `#22D3EE` | Primary neon / CTAs / links |
-| `--violet` | `#A78BFA` | Secondary neon, gradient partner |
-| `--ink` | `#EAF0FB` | Headings |
-| `--ink-soft` | `#9DAECB` | Body copy |
-| `--green` / `--amber` / `--red` | | **Semantic only** — tracked / warning / alert in the camera UI. Don't reuse for decoration. |
+| `--bg` | `#05070f` | Page canvas |
+| `--cyan` | `#37d6f0` | Primary accent, CTAs, links |
+| `--violet` | `#8b7bff` | Secondary accent, gradient partner |
+| `--ink` | `#e8edf7` | Headings |
+| `--ink-soft` | `#aab6cc` | Body copy |
+| `--safe` / `--amber` / `--red` | | **Semantic only**: Production badge / Beta badge / alerts. Don't reuse for decoration. |
 
-**Type** — Inter (UI), Instrument Serif (display headings, `.display`),
-JetBrains Mono (labels, data, eyebrows).
+Type is the system UI stack (Inter if installed), so the page loads no web fonts or third-party
+scripts, and the Content-Security-Policy in `app.py` allows only this site.
 
-Contrast is verified against the dark canvas: body copy 9.0:1, headings 20.3:1,
-small muted text 5.1:1 — all pass WCAG AA, most reach AAA. If you lighten the
-background or darken text, re-check before shipping.
-
-### Liquid glass
-
-Surfaces (`.card`, `.stat`, nav, modal) are frosted panes with a refracted edge.
-Two things keep the effect alive:
-
-1. **Something behind it to bend.** The fixed `.field-bg` and `.field-orbs`
-   colour layers exist purely so the glass has content to refract. Section
-   backgrounds are deliberately semi-transparent for the same reason. Darken
-   them and the glass flattens into ordinary translucency.
-2. **The `#lens` SVG filter**, wired in via `backdrop-filter: … url(#lens)`.
-
-> **Browser support.** `url()` inside `backdrop-filter` is **Chromium-only**.
-> Safari and Firefox fall back to the `-webkit-backdrop-filter` declaration —
-> plain blur, no refraction. This is intentional graceful degradation. The
-> layout, contrast and readability are unaffected.
-
-Tuning dials: `scale` on the `#lens` filter (refraction strength) and
-`.field-orbs { opacity }` (how much colour there is to refract).
-
-### Motion
-
-Scroll reveals, count-ups, the kinetic headline, the live camera wall and the
-alert stream are all driven by a single IIFE at the bottom of the file, using
-`IntersectionObserver` and one rAF-throttled scroll handler.
-
-Every animation is disabled under `prefers-reduced-motion: reduce` (block at the
-end of the stylesheet). **Add new animation there too.**
-
-The hero camera wall is pure CSS/SVG — no video files. The detection box colour
-transition (`@keyframes boxState`) is time-synced to the walking figure via a
-shared `--dur` custom property; change one duration without the other and the
-green→amber→red flip stops matching the person entering the restricted zone.
+**Product tour.** Six tabs, each labelled Production or Beta to match `FEATURE_STATUS.md` in the
+NewVis repo. Keep those labels honest when features change. To refresh the screenshots, run
+`tools/capture_dashboard.py` against a NewVis server and check every image for faces before pushing.
 
 ## How the lead form works
 
-The callback modal (soft gate: opens on exit-intent, deep scroll, or any
-"Request a callback" button) POSTs JSON to `/api/leads`:
+The callback modal (opens on exit-intent, deep scroll, or any "Request a callback" button) POSTs
+JSON to `/api/leads`:
 
 ```
 { name, email, phone, org, use_case, message, website }
 ```
 
-- `website` is a **honeypot** — real users leave it empty; filled submissions are
-  silently accepted but not stored.
-- Name, email and phone are required; the email is format-checked.
-- Rows are written to `leads.db` with the source IP and a UTC timestamp.
+- `website` is a **honeypot**: real users leave it empty; filled submissions are silently accepted
+  but not stored.
+- Name, phone, email and use case are required; email and phone are format-checked.
+- Each IP may submit 5 times an hour (`LEADS_PER_HOUR`).
+- Rows are written to `leads.db` with the source IP, browser user-agent and a UTC timestamp.
+- If `SMTP_HOST` and `LEADS_NOTIFY_TO` are set, every lead is also emailed to the team.
 
-This field list is a contract between `landing.html` and `app.py` — change both
-together.
+This field list is a contract between `landing.html` and `app.py`: change both together.
 
 ### Viewing submitted leads
 
-`GET /api/leads` is **disabled by default** (returns 403) so contact details are
+`GET /api/leads` is **disabled by default** (returns 404) so contact details are
 never exposed by accident. To enable it, set an admin key and send it as a header:
 
 ```bash

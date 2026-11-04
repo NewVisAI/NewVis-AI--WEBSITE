@@ -4,6 +4,12 @@ Production-ready deployment guide for both **website** (port 8000) and **dashboa
 
 ---
 
+
+> **Update:** `docker-compose.yml` now runs just the website plus Caddy (automatic HTTPS for gensolve.in,
+> `www` → apex redirect, HSTS). Leads are stored on the `website-leads` volume at `/data/leads.db`, and
+> `ADMIN_KEY` has no default: set it in `.env` (copy `.env.example`). The dashboard is no longer part of this
+> compose file; it belongs on the customer's own network, not on the public site.
+
 ## Quick Start: Docker Compose (Recommended)
 
 ### Prerequisites

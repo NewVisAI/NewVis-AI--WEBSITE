@@ -1,37 +1,31 @@
-version: '3.8'
-
+# gensolve.in: website + Caddy (automatic HTTPS).
+#   cp .env.example .env    # set ADMIN_KEY (and SMTP if you want lead emails)
+#   docker compose up -d --build
 services:
   website:
-    build:
-      context: ./website\ sentinel
+    build: .
     container_name: newvis-website
-    ports:
-      - "8000:8000"
-    environment:
-      - ADMIN_KEY=${ADMIN_KEY:-dev-key}
-      - LEADS_DB_PATH=/app/leads.db
+    restart: unless-stopped
+    env_file: .env
     volumes:
-      - website-leads:/app
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/healthz"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      - website-leads:/data
+    expose:
+      - "8000"
 
-  dashboard:
-    build:
-      context: ./SENTINEL-UI
-    container_name: newvis-dashboard
-    ports:
-      - "8002:8002"
+  caddy:
+    image: caddy:2.8.4
     restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8002/healthz"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+    depends_on: [website]
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
 
 volumes:
   website-leads:
-    driver: local
+  caddy_data:
+  caddy_config:
