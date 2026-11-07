@@ -350,7 +350,6 @@ how to get your own API keys. None of this is needed to just run the site.
 | `privacy.html`, `404.html` | Privacy notice (DPDP Act 2023, linked from the form and footer) and not-found page. |
 | `app.py` | FastAPI server: serves the pages, accepts leads, security headers, `/healthz`. |
 | `static/showcase/` | Product-tour images: `dashboard/*.webp` are real dashboard screenshots, `tracking.jpg` a pipeline frame. Faces are blurred. |
-| `static/marketing/` | Drop `dashboard-hero.png` here to replace the animated hero mock. |
 | `tools/capture_dashboard.py` | Retakes the tour screenshots from a running NewVis server (see its docstring). |
 | `test_leads.py` | `python -m unittest test_leads`: leads reach the database, spam is rejected, the call list is protected. |
 | `leads.db` | SQLite lead store. Git-ignored: it holds real contact data. |
@@ -418,10 +417,11 @@ sqlite3 leads.db "SELECT created_at, name, phone, email, use_case FROM leads ORD
 | `LEADS_DB_PATH` | `./leads.db`   | Where submissions are stored.                      |
 | `ADMIN_KEY`     | *(unset)*      | Enables `GET /api/leads` when the header matches.   |
 
-## Add real dashboard screenshots
+## The hero camera wall
 
-The hero shows an animated mock until a real screenshot is present. Drop an image
-at `static/marketing/dashboard-hero.png` and it replaces the mock automatically.
+The hero's "live analytics" window is an animated HTML/CSS mock, not a video or
+screenshot, so it stays light and sharp at any size. It lives in `#heroMock` in
+`landing.html`; its text labels are part of the page copy.
 
 ---
 
