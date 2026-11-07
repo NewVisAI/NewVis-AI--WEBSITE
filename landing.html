@@ -9,6 +9,7 @@
 <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
 <link rel="apple-touch-icon" href="/static/apple-touch-icon.png" />
 <meta name="theme-color" content="#05070f" />
+<script>try{if(localStorage.getItem('nv_theme')==='light'){document.documentElement.dataset.theme='light';document.querySelector('meta[name="theme-color"]').content='#f4f7fc'}}catch(e){}</script>
 <meta name="author" content="Gensolve" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Gensolve" />
@@ -72,11 +73,11 @@ try{if(!sessionStorage.getItem('nv_intro')&&!matchMedia('(prefers-reduced-motion
     radial-gradient(1100px 700px at 78% -8%, rgba(109,92,240,.20), transparent 60%),
     radial-gradient(900px 600px at 8% 8%, rgba(26,169,223,.16), transparent 55%),
     linear-gradient(180deg,var(--bg),var(--bg-2) 60%,var(--bg));}
-  .bg-grid{position:fixed;inset:-2px;z-index:-1;pointer-events:none;opacity:.5;
-    background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
-    background-size:64px 64px;
-    -webkit-mask-image:radial-gradient(circle at 50% 30%,#000 0%,transparent 78%);
-    mask-image:radial-gradient(circle at 50% 30%,#000 0%,transparent 78%);}
+  .bg-grid{position:fixed;inset:-2px;z-index:-1;pointer-events:none;opacity:.55;
+    background-image:radial-gradient(circle,rgba(150,170,205,.32) 1px,transparent 1.5px);
+    background-size:26px 26px;
+    -webkit-mask-image:radial-gradient(circle at 50% 22%,#000 0%,transparent 72%);
+    mask-image:radial-gradient(circle at 50% 22%,#000 0%,transparent 72%);}
   .scanline{position:fixed;left:0;right:0;height:220px;z-index:-1;pointer-events:none;
     background:linear-gradient(180deg,transparent,rgba(55,214,240,.06) 45%,transparent);
     animation:sweep 8s linear infinite;}
@@ -615,6 +616,110 @@ try{if(!sessionStorage.getItem('nv_intro')&&!matchMedia('(prefers-reduced-motion
   .band.locking .lock::after{animation:lockScan 1.1s .3s ease-in-out forwards}
 
 
+  /* ================= light theme ================= */
+  .theme-toggle{display:grid;place-items:center;width:40px;height:40px;border-radius:12px;cursor:pointer;color:var(--ink);
+    border:1px solid var(--line-strong);background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.025));
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.16);transition:transform .4s var(--ease-spring),border-color .3s ease,background-color .3s ease}
+  .theme-toggle:hover{transform:translateY(-1px) rotate(-12deg);border-color:var(--cyan)}
+  .theme-toggle svg{grid-area:1/1;transition:transform .5s var(--ease-out),opacity .3s ease}
+  .theme-toggle .ic-moon{opacity:0;transform:rotate(-90deg) scale(.6)}
+  html[data-theme="light"] .theme-toggle .ic-sun{opacity:0;transform:rotate(90deg) scale(.6)}
+  html[data-theme="light"] .theme-toggle .ic-moon{opacity:1;transform:none}
+  /* narrow phones: the header has no room, so the switch lives in the mobile menu instead */
+  @media(max-width:560px){.nav-cta .theme-toggle{display:none}}
+  .mnav-theme{display:none;align-items:center;gap:10px;width:100%;margin-top:6px;padding:12px 14px;border:0;border-top:1px solid var(--line);
+    border-radius:0 0 10px 10px;background:none;color:var(--ink-soft);font:inherit;font-weight:500;cursor:pointer;text-align:left}
+  .mnav-theme:hover{color:var(--ink)}
+  @media(max-width:560px){.mnav-theme{display:flex}}
+  .mnav-theme svg{flex:none}
+  .mnav-theme .ic-moon{display:none}
+  html[data-theme="light"] .mnav-theme .ic-sun{display:none}
+  html[data-theme="light"] .mnav-theme .ic-moon{display:inline}
+  ::view-transition-old(root),::view-transition-new(root){animation-duration:.45s;animation-timing-function:cubic-bezier(.16,1,.3,1)}
+
+  html[data-theme="light"]{
+    color-scheme:light;
+    --bg:#f4f7fc;--bg-2:#e9eff8;--ink:#0b1426;--ink-soft:#3c4a63;--ink-mute:#5d6b84;
+    --line:rgba(20,40,80,.12);--line-strong:rgba(20,40,80,.22);
+    --glass:rgba(255,255,255,.6);--glass-2:rgba(255,255,255,.45);
+    --cyan:#0e7490;--cyan-deep:#0b5f78;--violet:#5b4be0;--violet-deep:#4a3bc9;
+    --safe:#15803d;--amber:#b45309;--red:#dc2626;
+    --shadow:0 30px 70px -34px rgba(20,40,80,.35);
+  }
+  html[data-theme="light"] body{background:var(--bg)}
+  html[data-theme="light"] .bg-grid{background-image:radial-gradient(circle,rgba(20,40,80,.16) 1px,transparent 1.5px);opacity:.7}
+  html[data-theme="light"] .hero-floor{display:none}
+  /* on a light page a white glint erases the letters, so the shine is a bright cyan instead */
+  html[data-theme="light"] .hero h1 .g{background-image:linear-gradient(110deg,transparent 44%,rgba(34,211,238,.95) 50%,transparent 56%),linear-gradient(120deg,var(--cyan),var(--violet))}
+
+  /* product windows in daylight */
+  html[data-theme="light"] .frame{background:linear-gradient(180deg,rgba(255,255,255,.92),rgba(244,247,252,.9));
+    border-color:rgba(20,40,80,.14);box-shadow:0 30px 70px -34px rgba(20,40,80,.4),inset 0 1px 0 #fff}
+  html[data-theme="light"] .hero .frame{box-shadow:0 30px 70px -30px rgba(20,40,80,.4),0 0 0 1px rgba(14,116,144,.1),0 0 70px -30px rgba(14,116,144,.35)}
+  html[data-theme="light"] .frame-bar{background:rgba(20,40,80,.025)}
+  html[data-theme="light"] .shot-switch{background:rgba(255,255,255,.7)}
+  html[data-theme="light"] .shotview .screen{background:#e9eff8}
+  /* lock-on brackets sit on dark screenshots, so they keep the bright cyan */
+  html[data-theme="light"] .screen .lock i{border-color:#37d6f0}
+
+  /* hero camera wall: light feeds, dark silhouettes, white alert rows */
+  html[data-theme="light"] .mock.wall{background:linear-gradient(180deg,#f7f9fd,#eef3fa)}
+  html[data-theme="light"] .feed{border-color:rgba(20,40,80,.12);background:linear-gradient(175deg,#eaf2fc 0%,#dfe9f6 52%,#d4e1f2 100%)}
+  html[data-theme="light"] .feed::before{background-image:linear-gradient(rgba(14,116,144,.28) 1px,transparent 1px);opacity:.45}
+  html[data-theme="light"] .feed::after{background:linear-gradient(180deg,transparent,rgba(14,116,144,.12),transparent)}
+  html[data-theme="light"] .cam-tag{color:#3c4a63;background:rgba(255,255,255,.88);border-color:rgba(20,40,80,.14)}
+  html[data-theme="light"] .zone{border-color:rgba(220,38,38,.55);background:rgba(220,38,38,.07);box-shadow:inset 0 0 26px rgba(220,38,38,.1)}
+  html[data-theme="light"] .zone span{text-shadow:none}
+  html[data-theme="light"] .actor .sil svg{fill:rgba(36,62,110,.5)}
+  html[data-theme="light"] .bbox{box-shadow:0 0 12px -2px var(--c),inset 0 0 10px -6px var(--c)}
+  html[data-theme="light"] .feed .floaty{background:rgba(255,255,255,.94);color:var(--ink);border-color:rgba(20,40,80,.16);box-shadow:0 8px 22px -12px rgba(20,40,80,.35)}
+  html[data-theme="light"] .alert-feed{background:rgba(20,40,80,.025);border-top-color:rgba(20,40,80,.1)}
+  html[data-theme="light"] .alert-feed .afh{color:#5d6b84}
+  html[data-theme="light"] #heroStream .achip{color:#1f2a3d;background:#fff;border-color:rgba(20,40,80,.1);box-shadow:0 4px 12px -8px rgba(20,40,80,.3)}
+  html[data-theme="light"] #heroStream .achip .t{color:#6b7891}
+
+  html[data-theme="light"] .bg-field{background:
+    radial-gradient(1100px 700px at 78% -8%,rgba(109,92,240,.14),transparent 60%),
+    radial-gradient(900px 600px at 8% 8%,rgba(26,169,223,.14),transparent 55%),
+    linear-gradient(180deg,var(--bg),var(--bg-2) 60%,var(--bg))}
+  html[data-theme="light"] .bg-orbs{opacity:.7}
+  html[data-theme="light"] .hero-floor{opacity:.22}
+  /* glass in daylight: frosted white with a soft drop shadow */
+  html[data-theme="light"] .glass{
+    background:linear-gradient(145deg,rgba(255,255,255,.82),rgba(255,255,255,.55) 46%,rgba(255,255,255,.68));
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.95),0 18px 40px -24px rgba(20,40,80,.28)}
+  html[data-theme="light"] .glass::before{background:
+      radial-gradient(260px circle at var(--mx,50%) var(--my,0%),rgba(14,116,144,calc(.35 * var(--ga))),transparent 70%),
+      linear-gradient(140deg,rgba(255,255,255,.95),rgba(14,116,144,.2) 30%,transparent 55%,rgba(91,75,224,.22))}
+  html[data-theme="light"] .glass::after{background:radial-gradient(120% 70% at 18% 0%,rgba(255,255,255,.6),transparent 55%)}
+  html[data-theme="light"] :is(.tile,.uc,.wcard,.role,.step).settled:hover{
+    box-shadow:inset 0 1px 0 #fff,0 26px 50px -26px rgba(20,40,80,.35),0 0 36px -18px rgba(14,116,144,.4)}
+  html[data-theme="light"] .btn-ghost,html[data-theme="light"] .tour-tab:not([aria-selected="true"]),
+  html[data-theme="light"] .eyebrow,html[data-theme="light"] .theme-toggle{
+    background:linear-gradient(145deg,rgba(255,255,255,.9),rgba(255,255,255,.6));box-shadow:inset 0 1px 0 #fff,0 6px 16px -10px rgba(20,40,80,.3)}
+  html[data-theme="light"] header.nav.stuck{background-color:rgba(248,250,254,.78);box-shadow:inset 0 -1px 0 rgba(20,40,80,.08),0 12px 30px -24px rgba(20,40,80,.4)}
+  html[data-theme="light"] .mnav{background:rgba(250,252,255,.98)}
+  html[data-theme="light"] .ribbon{background:rgba(20,40,80,.1)}
+  html[data-theme="light"] .stat{background:linear-gradient(160deg,rgba(255,255,255,.88),rgba(255,255,255,.6))}
+  html[data-theme="light"] .stat b{background:linear-gradient(120deg,var(--ink),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+  /* buttons: deeper gradient + white text so they pass contrast on a light page */
+  html[data-theme="light"] .btn-primary,html[data-theme="light"] .tour-tab[aria-selected="true"]{color:#fff;
+    background:linear-gradient(135deg,#0e7490,#5b4be0);box-shadow:0 12px 28px -12px rgba(14,116,144,.55)}
+  html[data-theme="light"] .btn-primary::after{background:linear-gradient(100deg,transparent,rgba(255,255,255,.45),transparent)}
+  html[data-theme="light"] :is(.btn-ghost:hover,.nav-links a:hover,.mnav a:hover,.modal .close:hover,.tour-tab:hover){color:var(--ink)}
+  html[data-theme="light"] .roi-list b{color:var(--ink)}
+  html[data-theme="light"] .pill-flag{color:#fff}
+  html[data-theme="light"] .badge.prod{background:rgba(21,128,61,.1);border-color:rgba(21,128,61,.3)}
+  html[data-theme="light"] .badge.beta{background:rgba(180,83,9,.1);border-color:rgba(180,83,9,.3)}
+  /* popup + form */
+  html[data-theme="light"] .modal-scrim{background:rgba(15,25,45,.35)}
+  html[data-theme="light"] .modal.glass{background:rgba(255,255,255,.94)}
+  html[data-theme="light"] .field input,html[data-theme="light"] .field select,html[data-theme="light"] .field textarea{
+    background:#fff;color:var(--ink);border-color:var(--line-strong)}
+  html[data-theme="light"] ::selection{background:#0e7490;color:#fff}
+  html[data-theme="light"] .trace{background:rgba(20,40,80,.12)}
+  html[data-theme="light"] .lamp .cone{filter:saturate(1.4)}
+
   /* phones, tablets, low-power touch devices: keep the look, cut GPU cost */
   /* ================= motion + liquid-glass system ================= */
   :root{--ease-out:cubic-bezier(.16,1,.3,1);--ease-spring:cubic-bezier(.34,1.56,.64,1)}
@@ -720,6 +825,10 @@ try{if(!sessionStorage.getItem('nv_intro')&&!matchMedia('(prefers-reduced-motion
       <a href="#roi">ROI</a>
     </nav>
     <div class="nav-cta">
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to light theme" aria-pressed="false">
+        <svg class="ic-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.2M12 19.8V22M4.9 4.9l1.6 1.6M17.5 17.5l1.6 1.6M2 12h2.2M19.8 12H22M4.9 19.1l1.6-1.6M17.5 6.5l1.6-1.6"/></svg>
+        <svg class="ic-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7z"/></svg>
+      </button>
       <a class="btn btn-primary js-callback" data-src="nav">Request a callback</a>
       <button class="burger" id="burger" aria-label="Menu" aria-expanded="false" aria-controls="mnav">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
@@ -1717,6 +1826,37 @@ try{if(!sessionStorage.getItem('nv_intro')&&!matchMedia('(prefers-reduced-motion
     }, {threshold:.6}).observe(band);
   }
 
+
+  // ================= light / dark theme toggle =================
+  var themeBtn = document.getElementById('themeToggle');
+  var themeMeta = document.querySelector('meta[name="theme-color"]');
+  var syncThemeBtn = function(){
+    var light = document.documentElement.dataset.theme === 'light';
+    themeBtn.setAttribute('aria-pressed', light ? 'true' : 'false');
+    themeBtn.setAttribute('aria-label', light ? 'Switch to dark theme' : 'Switch to light theme');
+    if (mnavTheme) mnavTheme.querySelector('span').textContent = light ? 'Switch to dark theme' : 'Switch to light theme';
+  };
+  var mnavTheme = null;
+  if (themeBtn && mnav) {
+    mnavTheme = document.createElement('button'); mnavTheme.type = 'button'; mnavTheme.className = 'mnav-theme';
+    mnavTheme.innerHTML = themeBtn.querySelector('.ic-sun').outerHTML + themeBtn.querySelector('.ic-moon').outerHTML + '<span></span>';
+    mnavTheme.addEventListener('click', function(e){ e.stopPropagation(); themeBtn.click(); });
+    mnav.appendChild(mnavTheme);
+  }
+  if (themeBtn) {
+    syncThemeBtn();
+    themeBtn.addEventListener('click', function(){
+      var next = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light';
+      var apply = function(){
+        if (next === 'light') document.documentElement.dataset.theme = 'light';
+        else delete document.documentElement.dataset.theme;
+        if (themeMeta) themeMeta.content = next === 'light' ? '#f4f7fc' : '#05070f';
+        try { localStorage.setItem('nv_theme', next); } catch (e) {}
+        syncThemeBtn();
+      };
+      if (document.startViewTransition && !reducedMotion) document.startViewTransition(apply); else apply();
+    });
+  }
 })();
 </script>
 </body>

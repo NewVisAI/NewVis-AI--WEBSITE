@@ -86,7 +86,8 @@ async def security_headers(request: Request, call_next):
     elif request.url.path.startswith("/api/"):
         h.setdefault("Cache-Control", "no-store")
     else:
-        h.setdefault("Cache-Control", "public, max-age=300")
+        # revalidate pages every visit (cheap 304 via ETag) so updates show up immediately
+        h.setdefault("Cache-Control", "no-cache")
     return response
 
 
