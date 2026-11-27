@@ -20,14 +20,14 @@ Before starting, make sure you have:
 
 **Windows (Command Prompt or PowerShell):**
 ```bash
-git clone https://github.com/NewVisAI/NewVis-AI--WEBSITE.git
-cd "NewVis-AI--WEBSITE"
+git clone https://github.com/GenSolve/newvis-website.git
+cd newvis-website
 ```
 
 **macOS/Linux (Terminal):**
 ```bash
-git clone https://github.com/NewVisAI/NewVis-AI--WEBSITE.git
-cd NewVis-AI--WEBSITE
+git clone https://github.com/GenSolve/newvis-website.git
+cd newvis-website
 ```
 
 ### 🔧 Step 2: Create Virtual Environment & Install Dependencies
@@ -523,9 +523,8 @@ See `DEPLOYMENT.md` for advanced production setup (Nginx, systemd, cloud).
 
 ## 📞 Support & Feedback
 
-- **Issues:** <https://github.com/NewVisAI/SENTINEL-WEBSITE/issues>
-- **Discussions:** <https://github.com/NewVisAI/SENTINEL-WEBSITE/discussions>
-- **Email:** support@newvis.ai
+- **Issues:** <https://github.com/GenSolve/newvis-website/issues>
+- **Email:** gensolve.team@gmail.com
 
 ---
 

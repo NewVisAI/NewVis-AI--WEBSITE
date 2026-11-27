@@ -161,7 +161,7 @@ upstream dashboard {
 
 server {
     listen 80;
-    server_name newvis.ai www.newvis.ai;
+    server_name newvis.gensolve.in;
 
     # Website
     location / {
@@ -305,6 +305,6 @@ docker cp ./leads.db.backup newvis-website:/app/leads.db
 
 ## Support
 
-- **Issues:** https://github.com/NewVisAI/SENTINEL-WEBSITE/issues
+- **Issues:** https://github.com/GenSolve/newvis-website/issues
 - **Docs:** See `README.md` in each service directory
-- **Email:** support@newvis.ai
+- **Email:** gensolve.team@gmail.com
