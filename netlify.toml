@@ -1,0 +1,28 @@
+# Netlify settings for newvis.gensolve.in (static copy of the site; see README "Hosting on Netlify").
+# The "Request a callback" form posts to the team's Google Sheet (tools/leads-google-sheet.gs),
+# so no Python server is needed here.
+[build]
+  command = "sh scripts/build-netlify.sh"
+  publish = "dist"
+
+# The Python app served the SVG icon at /favicon.ico
+[[redirects]]
+  from = "/favicon.ico"
+  to = "/static/favicon.svg"
+  status = 200
+
+# Same security headers as app.py, plus the Google Sheet endpoint for the form
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; font-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+# Images and icons: browsers may keep them for a day (same as app.py). Pages always revalidate.
+[[headers]]
+  for = "/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"

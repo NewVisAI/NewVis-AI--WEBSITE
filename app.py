@@ -1,4 +1,4 @@
-"""Public website for NewVis AI (a Gensolve product) — https://gensolve.in
+"""Public website for NewVis AI (a Gensolve product) — https://newvis.gensolve.in
 
 Deliberately tiny and independent of the CCTV engine: no torch, no OpenCV, no
 camera code. It serves the marketing pages and accepts "Request a callback"
@@ -50,7 +50,7 @@ ADMIN_TOKEN = os.getenv("ADMIN_KEY") or os.getenv("LEADS_ADMIN_TOKEN") or ""
 TRUST_PROXY = os.getenv("TRUST_PROXY", "0") == "1"
 LEADS_PER_HOUR = int(os.getenv("LEADS_PER_HOUR", "5"))
 
-app = FastAPI(title="NewVis AI — gensolve.in", docs_url=None, redoc_url=None, openapi_url=None)
+app = FastAPI(title="NewVis AI — newvis.gensolve.in", docs_url=None, redoc_url=None, openapi_url=None)
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 
@@ -64,7 +64,7 @@ CSP = (
     "script-src 'self' 'unsafe-inline'; "
     "style-src 'self' 'unsafe-inline'; "
     "img-src 'self' data:; "
-    "connect-src 'self'; "
+    "connect-src 'self' https://script.google.com https://script.googleusercontent.com; "
     "font-src 'self'; "
     "frame-ancestors 'none'; "
     "base-uri 'self'; "

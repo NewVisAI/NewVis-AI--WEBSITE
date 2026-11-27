@@ -1,4 +1,4 @@
-# gensolve.in: website + Caddy (automatic HTTPS).
+# newvis.gensolve.in: website + Caddy (automatic HTTPS).
 #   cp .env.example .env    # set ADMIN_KEY (and SMTP if you want lead emails)
 #   docker compose up -d --build
 services:

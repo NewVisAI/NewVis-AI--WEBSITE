@@ -392,7 +392,28 @@ JSON to `/api/leads`:
 - Rows are written to `leads.db` with the source IP, browser user-agent and a UTC timestamp.
 - If `SMTP_HOST` and `LEADS_NOTIFY_TO` are set, every lead is also emailed to the team.
 
-This field list is a contract between `landing.html` and `app.py`: change both together.
+This field list is a contract between `landing.html`, `app.py` and `tools/leads-google-sheet.gs`:
+change all three together.
+
+### Hosting on Netlify (newvis.gensolve.in)
+
+The live site is a static copy of the pages on Netlify, so the Python app doesn't run there. Instead,
+the form posts to a small Google Apps Script that saves each lead as a row in a Google Sheet and
+emails the team.
+
+- **Build:** `netlify.toml` runs `scripts/build-netlify.sh`, which copies `landing.html` (as
+  `index.html`), `privacy.html`, `404.html` and `static/` into `dist/`. The same security headers as
+  `app.py` are set in `netlify.toml`.
+- **Leads:** set `LEADS_URL` in `landing.html` to the Apps Script web-app URL (ends in `/exec`). On
+  `localhost` the form still uses the Python `/api/leads`, so local testing is unchanged. If
+  `LEADS_URL` is empty, the form always uses `/api/leads`.
+- **Setting up the Sheet:** follow the steps at the top of `tools/leads-google-sheet.gs`. Leads appear
+  in the Sheet with an Indian-time timestamp, and each one is emailed to the Sheet's owner. Replying to
+  that email replies to the visitor.
+- **Spam:** the honeypot still applies. There's no visitor IP in Apps Script, so the limits are 3
+  requests an hour per email address and 60 an hour across the whole site.
+- **Self-hosting instead:** `docker-compose.yml` and `Caddyfile` still run the Python app with HTTPS
+  on a server, if we ever move off Netlify.
 
 ### Viewing submitted leads
 

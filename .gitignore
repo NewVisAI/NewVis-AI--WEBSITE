@@ -25,3 +25,6 @@ landing.original.html
 
 # Secrets
 .env
+
+# Netlify build output
+dist/
