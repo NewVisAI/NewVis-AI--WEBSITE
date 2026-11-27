@@ -1,7 +1,7 @@
 # Caddy fetches and renews Let's Encrypt certificates automatically once the
 # DNS A/AAAA record for newvis.gensolve.in points at this server.
 {
-	email newvis.team@gmail.com
+	email gensolve.team@gmail.com
 }
 
 newvis.gensolve.in {
