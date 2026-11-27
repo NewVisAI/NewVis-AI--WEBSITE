@@ -5,6 +5,12 @@
   command = "sh scripts/build-netlify.sh"
   publish = "dist"
 
+# Same short address the Python app used for the privacy page
+[[redirects]]
+  from = "/privacy"
+  to = "/privacy.html"
+  status = 200
+
 # The Python app served the SVG icon at /favicon.ico
 [[redirects]]
   from = "/favicon.ico"

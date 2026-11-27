@@ -412,6 +412,10 @@ emails the team.
   that email replies to the visitor.
 - **Spam:** the honeypot still applies. There's no visitor IP in Apps Script, so the limits are 3
   requests an hour per email address and 60 an hour across the whole site.
+- **Preview the Netlify copy locally:** run `sh scripts/build-netlify.sh`, then
+  `python scripts/preview-netlify.py`, and open <http://newvis.localhost:8210>. It behaves like
+  Netlify (`/privacy`, `/favicon.ico`, the 404 page). The form sends to the real Google Sheet there,
+  so any test you submit becomes a real row and email.
 - **Self-hosting instead:** `docker-compose.yml` and `Caddyfile` still run the Python app with HTTPS
   on a server, if we ever move off Netlify.
 
